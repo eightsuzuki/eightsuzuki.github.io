@@ -53,7 +53,7 @@
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  #particles-js { position: fixed; inset: 0; z-index: 0; opacity: .35; pointer-events: none; }
+  #particles-js { position: fixed; inset: 0; z-index: 0; opacity: .7; pointer-events: none; }
   main { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 72px 20px 80px; }
 
   /* language switching: html[lang] shows only matching text */
@@ -248,15 +248,19 @@
   if (window.particlesJS && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     particlesJS('particles-js', {
       particles: {
-        number: { value: 40, density: { enable: true, value_area: 900 } },
-        color: { value: '#888' },
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#5b9bd5' },
         shape: { type: 'circle' },
-        opacity: { value: 0.5, random: true },
-        size: { value: 2.5, random: true },
-        line_linked: { enable: true, distance: 140, color: '#888', opacity: 0.35, width: 1 },
-        move: { enable: true, speed: 0.8, out_mode: 'out' }
+        opacity: { value: 0.6, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: true, distance: 150, color: '#5b9bd5', opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2, out_mode: 'out' }
       },
-      interactivity: { events: { onhover: { enable: false }, onclick: { enable: false } } },
+      interactivity: {
+        detect_on: 'window',
+        events: { onhover: { enable: true, mode: 'grab' }, onclick: { enable: true, mode: 'push' }, resize: true },
+        modes: { grab: { distance: 160, line_linked: { opacity: 0.8 } }, push: { particles_nb: 4 } }
+      },
       retina_detect: true
     });
   }
