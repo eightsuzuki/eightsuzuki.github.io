@@ -9,84 +9,119 @@
 <meta property="og:description" content="Researcher at Fujitsu Research. Transformer interpretability, NLP, LLMs.">
 <meta property="og:image" content="images/share.png">
 <meta property="og:type" content="website">
-<link rel="icon" href="favicon.ico">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<script>
+  // Apply saved theme/lang before first paint to avoid flashing.
+  (function () {
+    var t = localStorage.getItem('theme');
+    if (t) document.documentElement.dataset.theme = t;
+    var l = localStorage.getItem('lang') || (navigator.language.startsWith('ja') ? 'ja' : 'en');
+    document.documentElement.lang = l;
+  })();
+</script>
 <style>
   :root {
-    --bg: #fbfbfa;
+    --bg: #f7f7f5;
     --fg: #1c1c1c;
     --muted: #666;
-    --line: #e4e4e0;
+    --line: #dededa;
     --accent: #1f5f8b;
-    --tag: #eef3f7;
-    color-scheme: light dark;
+    --tag: #e9eff4;
+    --card: rgba(255,255,255,.72);
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #141416;
-      --fg: #e8e8e6;
-      --muted: #9a9a96;
-      --line: #2a2a2e;
-      --accent: #7fb3d8;
-      --tag: #1e2a33;
+    :root:not([data-theme="light"]) {
+      --bg: #121214; --fg: #e8e8e6; --muted: #9a9a96; --line: #2c2c30;
+      --accent: #7fb3d8; --tag: #1e2a33; --card: rgba(18,18,20,.72);
+      color-scheme: dark;
     }
   }
+  :root[data-theme="dark"] {
+    --bg: #121214; --fg: #e8e8e6; --muted: #9a9a96; --line: #2c2c30;
+    --accent: #7fb3d8; --tag: #1e2a33; --card: rgba(18,18,20,.72);
+    color-scheme: dark;
+  }
+
   * { box-sizing: border-box; }
   body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--fg);
-    font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.7 system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+
+  #particles-js { position: fixed; inset: 0; z-index: 0; opacity: .35; pointer-events: none; }
+  main { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; padding: 72px 20px 80px; }
+
+  /* language switching: html[lang] shows only matching text */
+  [lang="en"] .ja, [lang="ja"] .en { display: none; }
+
+  .ctrl { position: fixed; top: 14px; right: 14px; z-index: 2; display: flex; gap: 6px; }
+  .ctrl button {
+    font: inherit; font-size: .85rem; cursor: pointer; color: var(--fg);
+    background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+    padding: 4px 12px; backdrop-filter: blur(8px);
+  }
+  .ctrl button:hover { border-color: var(--accent); }
 
   header { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; }
   header img { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; }
-  h1 { margin: 0; font-size: 2rem; letter-spacing: -0.01em; line-height: 1.2; }
+  h1 { margin: 0; font-size: 2rem; letter-spacing: -.01em; line-height: 1.2; }
   h1 small { display: block; font-size: 1rem; font-weight: 400; color: var(--muted); margin-top: 4px; }
   .affil { margin: 8px 0 0; color: var(--muted); }
-  .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: 0.95rem; }
+  .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 10px; font-size: .95rem; }
 
-  nav { display: flex; gap: 18px; margin: 36px 0 8px; padding-bottom: 10px; border-bottom: 1px solid var(--line); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  nav { display: flex; gap: 18px; margin: 36px 0 8px; padding-bottom: 10px; border-bottom: 1px solid var(--line); font-size: .9rem; }
   nav a { color: var(--muted); }
   section { margin-top: 44px; }
   h2 { font-size: 1.15rem; margin: 0 0 16px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
-  h3 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 24px 0 8px; }
+  h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 24px 0 8px; }
 
   .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
-  .tags li { background: var(--tag); border-radius: 999px; padding: 3px 12px; font-size: 0.85rem; }
+  .tags li { background: var(--tag); border-radius: 999px; padding: 3px 12px; font-size: .85rem; }
 
   ol.pubs { list-style: none; padding: 0; margin: 0; }
   ol.pubs li { padding: 12px 0; border-bottom: 1px dashed var(--line); }
   ol.pubs li:last-child { border-bottom: 0; }
   .pubs .t { font-weight: 600; }
-  .pubs .a { display: block; }
-  .pubs .v { display: block; color: var(--muted); font-size: 0.93rem; }
-  .pubs .v em { font-style: normal; }
-  .pubs .l { font-size: 0.9rem; }
+  .pubs .a, .pubs .v { display: block; }
+  .pubs .v { color: var(--muted); font-size: .93rem; }
+  .pubs .l { font-size: .9rem; }
   .pubs .l a { margin-right: 12px; }
 
   dl { margin: 0; display: grid; grid-template-columns: 11em 1fr; gap: 10px 20px; }
-  dt { color: var(--muted); font-size: 0.93rem; font-variant-numeric: tabular-nums; }
+  dt { color: var(--muted); font-size: .93rem; font-variant-numeric: tabular-nums; }
   dd { margin: 0; }
-  dd small { display: block; color: var(--muted); font-size: 0.9rem; }
+  dd small { display: block; color: var(--muted); font-size: .9rem; }
   @media (max-width: 520px) {
     dl { grid-template-columns: 1fr; gap: 2px; }
     dt { margin-top: 12px; }
     h1 { font-size: 1.6rem; }
+    main { padding-top: 64px; }
   }
-  footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+  footer { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; }
 </style>
 </head>
 <body>
+<div id="particles-js"></div>
+
+<div class="ctrl">
+  <button id="lang" type="button" aria-label="Switch language"><span class="en">日本語</span><span class="ja">English</span></button>
+  <button id="theme" type="button" aria-label="Toggle dark mode">◐</button>
+</div>
+
 <main>
   <header>
     <img src="images/profile.png" alt="Eight Suzuki" width="112" height="112">
     <div>
-      <h1>Eight Suzuki <small>鈴木 詠斗</small></h1>
-      <p class="affil">Researcher, Artificial Intelligence Laboratory, Fujitsu Research</p>
+      <h1><span class="en">Eight Suzuki <small>鈴木 詠斗</small></span><span class="ja">鈴木 詠斗 <small>Eight Suzuki</small></span></h1>
+      <p class="affil">
+        <span class="en">Researcher, Artificial Intelligence Laboratory, Fujitsu Research</span>
+        <span class="ja">富士通研究所 人工知能研究所 研究員</span>
+      </p>
       <div class="links">
         <a href="https://scholar.google.com/citations?user=smsnYZ4AAAAJ">Google Scholar</a>
         <a href="https://github.com/eightsuzuki">GitHub</a>
@@ -95,80 +130,136 @@
   </header>
 
   <nav>
-    <a href="#about">About</a>
-    <a href="#publications">Publications</a>
-    <a href="#experience">Experience</a>
-    <a href="#education">Education</a>
+    <a href="#about"><span class="en">About</span><span class="ja">概要</span></a>
+    <a href="#publications"><span class="en">Publications</span><span class="ja">業績</span></a>
+    <a href="#experience"><span class="en">Experience</span><span class="ja">経歴</span></a>
+    <a href="#education"><span class="en">Education</span><span class="ja">学歴</span></a>
   </nav>
 
   <section id="about">
-    <h2>About</h2>
-    <p>
-      I work on the interpretability of Transformer models. My recent research extends
-      Integrated Gradients to set-to-set maps at module boundaries (attention and MLP) so that
-      information flow inside a Transformer layer can be traced and diagnosed without retraining
-      or model-specific interpreters.
-    </p>
-    <p>
-      I received my M.Eng. from Waseda University (Murata Lab, 2026), where I also worked as a
-      research assistant at NICT CREATE (AI Security Research Center). I joined Fujitsu Research in April 2026.
-    </p>
+    <h2><span class="en">About</span><span class="ja">概要</span></h2>
+    <div class="en">
+      <p>
+        I work on the interpretability of Transformer models. My recent research extends
+        Integrated Gradients to set-to-set maps at module boundaries (attention and MLP) so that
+        information flow inside a Transformer layer can be traced and diagnosed without retraining
+        or model-specific interpreters.
+      </p>
+      <p>
+        I received my M.Eng. from Waseda University (Murata Lab, 2026), where I also worked as a
+        research assistant at NICT CREATE (AI Security Research Center). I joined Fujitsu Research in April 2026.
+      </p>
+    </div>
+    <div class="ja">
+      <p>
+        Transformer モデルの解釈性を研究しています。最近は、統合勾配法（Integrated Gradients）を
+        Attention と MLP の境界における集合から集合への写像に拡張し、再学習や
+        モデル固有の解釈器なしに Transformer の層内の情報の流れを追跡・診断する手法に取り組んでいます。
+      </p>
+      <p>
+        2026年に早稲田大学大学院（村田研究室）で修士号を取得。在学中は NICT AIセキュリティ研究センター（CREATE）で
+        リサーチアシスタントを務めました。2026年4月より富士通研究所に所属しています。
+      </p>
+    </div>
     <ul class="tags">
-      <li>Natural language processing</li>
-      <li>Interpretability</li>
-      <li>Transformer models</li>
-      <li>Large language models</li>
+      <li><span class="en">Natural language processing</span><span class="ja">自然言語処理</span></li>
+      <li><span class="en">Interpretability</span><span class="ja">解釈性</span></li>
+      <li><span class="en">Transformer models</span><span class="ja">Transformer</span></li>
+      <li><span class="en">Large language models</span><span class="ja">大規模言語モデル</span></li>
     </ul>
   </section>
 
   <section id="publications">
-    <h2>Publications</h2>
+    <h2><span class="en">Publications</span><span class="ja">業績</span></h2>
 
-    <h3>International conference</h3>
+    <h3><span class="en">International conference</span><span class="ja">国際会議</span></h3>
     <ol class="pubs">
       <li>
         <span class="t">LIG: Layer-wise Integrated Gradients for Within-Layer Flow Analysis in Transformers</span>
         <span class="a"><strong>Eight Suzuki</strong>, Hideitsu Hino, Noboru Murata</span>
-        <span class="v"><em>Proceedings of the 33rd International Conference on Neural Information Processing (ICONIP 2026)</em>, Melbourne, Nov 2026. To appear.</span>
+        <span class="v">Proceedings of the 33rd International Conference on Neural Information Processing (ICONIP 2026), Melbourne, Nov 2026. <span class="en">To appear.</span><span class="ja">採録決定</span></span>
         <span class="l"><a href="https://arxiv.org/abs/2606.21564">arXiv</a><a href="https://github.com/eightsuzuki/layer-wise-integrated-gradients">code</a></span>
       </li>
     </ol>
 
-
-    <h3>Domestic (Japanese)</h3>
+    <h3><span class="en">Domestic (Japanese)</span><span class="ja">国内</span></h3>
     <ol class="pubs">
       <li>
         <span class="t">Transformer における Attention 機構の仕組み</span>
         <span class="a"><strong>鈴木 詠斗</strong>, 村田 昇</span>
-        <span class="v"><em>数理解析研究所講究録 (RIMS Kôkyûroku)</em> No. 2353, pp. 194–205, 2026.</span>
+        <span class="v">数理解析研究所講究録 (RIMS Kôkyûroku) No. 2353, pp. 194–205, 2026.</span>
         <span class="l"><a href="https://www.kurims.kyoto-u.ac.jp/~kyodo/kokyuroku/contents/pdf/2353-22.pdf">PDF</a><a href="https://www.kurims.kyoto-u.ac.jp/~kyodo/kokyuroku/contents/2353.html">RIMS</a></span>
       </li>
     </ol>
   </section>
 
   <section id="experience">
-    <h2>Experience</h2>
+    <h2><span class="en">Experience</span><span class="ja">経歴</span></h2>
     <dl>
-      <dt>Apr 2026 – present</dt>
-      <dd>Researcher, Artificial Intelligence Laboratory, Fujitsu Research, Fujitsu Limited</dd>
-      <dt>Jan 2025 – Mar 2026</dt>
-      <dd>Research Assistant, <a href="https://create.nict.go.jp/">Center for Research on AI Security and Technology Evolution (CREATE)</a>, NICT<small>AIセキュリティ研究センター, 国立研究開発法人情報通信研究機構</small></dd>
+      <dt><span class="en">Apr 2026 – present</span><span class="ja">2026年4月 – 現在</span></dt>
+      <dd>
+        <span class="en">Researcher, Artificial Intelligence Laboratory, Fujitsu Research, Fujitsu Limited</span>
+        <span class="ja">富士通株式会社 富士通研究所 人工知能研究所 研究員</span>
+      </dd>
+      <dt><span class="en">Jan 2025 – Mar 2026</span><span class="ja">2025年1月 – 2026年3月</span></dt>
+      <dd>
+        <span class="en">Research Assistant, <a href="https://create.nict.go.jp/">Center for Research on AI Security and Technology Evolution (CREATE)</a>, NICT</span>
+        <span class="ja">国立研究開発法人情報通信研究機構（NICT）<a href="https://create.nict.go.jp/">AIセキュリティ研究センター（CREATE）</a> リサーチアシスタント</span>
+      </dd>
       <dt>2024</dt>
-      <dd>Software engineering internships<small>GMO Pepabo, DMM.com, KADOKAWA</small></dd>
+      <dd>
+        <span class="en">Software engineering internships</span><span class="ja">ソフトウェアエンジニア インターン</span>
+        <small>GMO Pepabo, DMM.com, KADOKAWA</small>
+      </dd>
     </dl>
   </section>
 
   <section id="education">
-    <h2>Education</h2>
+    <h2><span class="en">Education</span><span class="ja">学歴</span></h2>
     <dl>
-      <dt>Apr 2024 – Mar 2026</dt>
-      <dd>M.Eng., Department of Electrical Engineering and Bioscience, Waseda University<small>Murata Laboratory (advisor: Prof. Noboru Murata)</small></dd>
-      <dt>Apr 2020 – Mar 2024</dt>
-      <dd>B.Eng., Department of Electrical Engineering and Bioscience, Waseda University</dd>
+      <dt><span class="en">Apr 2024 – Mar 2026</span><span class="ja">2024年4月 – 2026年3月</span></dt>
+      <dd>
+        <span class="en">M.Eng., Department of Electrical Engineering and Bioscience, Waseda University<small>Murata Laboratory (advisor: Prof. Noboru Murata)</small></span>
+        <span class="ja">早稲田大学大学院 先進理工学研究科 電気・情報生命専攻 修士課程 修了<small>村田研究室（指導教員：村田昇 教授）</small></span>
+      </dd>
+      <dt><span class="en">Apr 2020 – Mar 2024</span><span class="ja">2020年4月 – 2024年3月</span></dt>
+      <dd>
+        <span class="en">B.Eng., Department of Electrical Engineering and Bioscience, Waseda University</span>
+        <span class="ja">早稲田大学 先進理工学部 電気・情報生命工学科 卒業</span>
+      </dd>
     </dl>
   </section>
 
   <footer>© 2026 Eight Suzuki</footer>
 </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  var root = document.documentElement;
+  document.getElementById('lang').onclick = function () {
+    root.lang = root.lang === 'ja' ? 'en' : 'ja';
+    localStorage.setItem('lang', root.lang);
+  };
+  document.getElementById('theme').onclick = function () {
+    var dark = getComputedStyle(root).colorScheme === 'dark';
+    root.dataset.theme = dark ? 'light' : 'dark';
+    localStorage.setItem('theme', root.dataset.theme);
+  };
+  if (window.particlesJS && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 40, density: { enable: true, value_area: 900 } },
+        color: { value: '#888' },
+        shape: { type: 'circle' },
+        opacity: { value: 0.5, random: true },
+        size: { value: 2.5, random: true },
+        line_linked: { enable: true, distance: 140, color: '#888', opacity: 0.35, width: 1 },
+        move: { enable: true, speed: 0.8, out_mode: 'out' }
+      },
+      interactivity: { events: { onhover: { enable: false }, onclick: { enable: false } } },
+      retina_detect: true
+    });
+  }
+</script>
 </body>
 </html>
